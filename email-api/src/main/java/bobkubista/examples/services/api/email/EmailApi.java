@@ -3,7 +3,12 @@
  */
 package bobkubista.examples.services.api.email;
 
+import java.io.File;
+
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -19,7 +24,46 @@ import bobkubista.examples.services.api.email.model.EmailContext;
 public interface EmailApi {
 
     /**
-     * Send an email
+     * Delete a template
+     *
+     * @param template
+     *            the template to delete
+     * @return 200 if success
+     */
+    @Path("{template}")
+    @DELETE
+    Response deleteTemplate(@PathParam("template") final String template);
+
+    /**
+     *
+     * @param template
+     *            the template to get
+     * @return the template file
+     */
+    @Path("{template}")
+    @GET
+    Response getTemplate(@PathParam("template") final String template);
+
+    /**
+     *
+     * @return a list of all email templates available
+     */
+    @GET
+    Response getTemplates();
+
+    /**
+     * /**
+     *
+     * @param template
+     *            the template to get
+     * @return the template file
+     */
+    @Path("{template}")
+    @POST
+    Response saveTemplate(@PathParam("template") final String template, final File file);
+
+    /**
+     * Send a test email
      *
      * @param context
      *            {@link EmailContext}
