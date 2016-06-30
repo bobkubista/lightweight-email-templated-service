@@ -51,11 +51,30 @@ public class EmailFacadeIT extends JerseyTest {
     }
 
     @Test
+    public void testDeleteTemplate() {
+        // TODO
+    }
+
+    @Test
+    public void testGetTemplate() {
+        // TODO
+    }
+
+    @Test
+    public void testGetTemplates() {
+
+    }
+
+    @Test
+    public void testSaveTemplate() {
+
+    }
+
+    @Test
     public void testSendEmail() throws URISyntaxException {
         final EmailContext email = new EmailBuilder("bla@foo.bar", "foobar").addReplacement(new DateReplacement(new Date()))
                 .addReplacement(new LinkReplacement(new URI("http://bla.bla")))
                 .build();
-        System.out.println(email.toString());
         final Response response = this.target("/")
                 .request(MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON)
                 .put(Entity.entity(email.getEmail(), MediaType.APPLICATION_XML), Response.class);
@@ -73,7 +92,6 @@ public class EmailFacadeIT extends JerseyTest {
         final EmailContext email = new EmailBuilder("bla@foo.bar", "foobar").addReplacement(new DateReplacement(new Date()))
                 .addReplacement(new LinkReplacement(new URI("http://bla.bla")))
                 .build();
-        System.out.println(email.toString());
         final Response response = this.target("extraTestTemplate")
                 .request(MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON)
                 .put(Entity.entity(email.getEmail(), MediaType.APPLICATION_XML), Response.class);

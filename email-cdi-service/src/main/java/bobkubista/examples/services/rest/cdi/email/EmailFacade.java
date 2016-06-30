@@ -11,6 +11,7 @@ import java.io.OutputStream;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class EmailFacade implements EmailApi {
             return Response.ok()
                     .build();
         } else {
-            return Response.serverError()
+            return Response.status(Status.NOT_FOUND)
                     .build();
         }
 
@@ -67,6 +68,7 @@ public class EmailFacade implements EmailApi {
             int read = 0;
             final byte[] bytes = new byte[1024];
 
+            // TODO File not found thrown
             out = new FileOutputStream(new File(ServerProperties.get()
                     .getString("email.template.location"), template + ".tmpl"));
             while ((read = fos.read(bytes)) != -1) {
