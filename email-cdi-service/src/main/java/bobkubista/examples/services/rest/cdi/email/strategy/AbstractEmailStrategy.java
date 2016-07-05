@@ -17,6 +17,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
@@ -37,11 +39,29 @@ import freemarker.template.TemplateException;
  * @author bkubista
  *
  */
-public abstract class AbstractEmailStrategy implements EmailStrategy {
+public abstract class AbstractEmailStrategy implements EmailStrategy, WebEmailStrategy {
 
     private static final String VELOCITY_ENGINE = "Velocity";
+
     private static final String FREE_MARKER_ENGINE = "FreeMarker";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractEmailStrategy.class);
+
+    @Override
+    public String getWebVersion() {
+        LOGGER.info("Constructing email : {} for webview)", this.getEmail());
+        final MimeBodyPart textPart = new MimeBodyPart();
+        try {
+            textPart.setContent(this.getEmail()
+                    .getMessage(), "text/html; charset=UTF-8");
+            return textPart.getContent()
+                    .toString();
+        } catch (final MessagingException | IOException e) {
+            LOGGER.error("Cannot construct webversion of email : {}\n{}", this.getEmail(), e);
+            throw new ServerErrorException(Status.INTERNAL_SERVER_ERROR, e);
+        }
+
+    }
 
     @Override
     public boolean send() {

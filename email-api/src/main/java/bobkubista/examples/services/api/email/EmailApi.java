@@ -51,6 +51,14 @@ public interface EmailApi {
     @GET
     Response getTemplates();
 
+    @PUT
+    @Path("webversion")
+    Response getWebVersionOfEmail(EmailContext context);
+
+    @PUT
+    @Path("webversion/{template}")
+    Response getWebVersionOfEmail(EmailContext context, @PathParam("template") String template);
+
     /**
      * /**
      *

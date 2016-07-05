@@ -22,6 +22,7 @@ import bobkubista.examples.services.api.email.model.EmailContext;
 import bobkubista.examples.services.rest.cdi.email.strategy.EmailStrategy;
 import bobkubista.examples.services.rest.cdi.email.strategy.TemplateEmailStrategy;
 import bobkubista.examples.services.rest.cdi.email.strategy.TestEmailStrategy;
+import bobkubista.examples.services.rest.cdi.email.strategy.WebEmailStrategy;
 
 /**
  * @author Bob
@@ -62,6 +63,18 @@ public class EmailFacade implements EmailApi {
     }
 
     @Override
+    public Response getWebVersionOfEmail(final EmailContext context) {
+        LOGGER.info("Viewing web version email to {}", context.getRecipient());
+        return this.buildResponse(() -> new TestEmailStrategy(context).getWebVersion());
+    }
+
+    @Override
+    public Response getWebVersionOfEmail(final EmailContext context, final String template) {
+        LOGGER.info("Viewing web version of {} email to {}", template, context.getRecipient());
+        return this.buildResponse(() -> new TemplateEmailStrategy(context, template).getWebVersion());
+    }
+
+    @Override
     public Response saveTemplate(final String template, final File file) {
         try (FileInputStream fos = new FileInputStream(file)) {
             OutputStream out = null;
@@ -70,7 +83,7 @@ public class EmailFacade implements EmailApi {
 
             // TODO File not found thrown
             out = new FileOutputStream(new File(ServerProperties.get()
-                    .getString("email.template.location"), template + ".tmpl"));
+                    .getString("email.template.location") + File.separator + template + ".tmpl"));
             while ((read = fos.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
             }
@@ -105,5 +118,10 @@ public class EmailFacade implements EmailApi {
             return Response.serverError()
                     .build();
         }
+    }
+
+    private Response buildResponse(final WebEmailStrategy stategy) {
+        return Response.ok(stategy.getWebVersion())
+                .build();
     }
 }

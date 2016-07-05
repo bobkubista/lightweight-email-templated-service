@@ -23,6 +23,7 @@ import bobkubista.examples.services.api.email.model.LinkReplacement;
 public class TestEmailStrategyTest {
 
     private static final String GENERAL_EMAIL = "Hello bla@foo.bar,Please click link below to activate your account, http://bla.blaThank you,";
+
     private static final String SUBJECT = "foobar";
 
     @Test
@@ -39,6 +40,18 @@ public class TestEmailStrategyTest {
         Assert.assertEquals(SUBJECT, composedEmail.getSubject());
         Assert.assertFalse(email.getMessage(), StringUtils.contains(email.getMessage(), "${"));
         Assert.assertEquals(GENERAL_EMAIL, email.getMessage());
+    }
+
+    @Test
+    public void testGeneralEmailStrategyWebVersion() throws URISyntaxException {
+        final EmailContext email = new EmailBuilder("bla@foo.bar", "foobar").addReplacement(new DateReplacement(new Date()))
+                .addReplacement(new LinkReplacement(new URI("http://bla.bla")))
+                .build();
+        email.setMessage(GENERAL_EMAIL);
+        final TestEmailStrategy strategy = new TestEmailStrategy(email);
+
+        final String composedEmail = strategy.getWebVersion();
+        Assert.assertEquals("Hello bla@foo.bar,Please click link below to activate your account, http://bla.blaThank you,", composedEmail);
     }
 
 }

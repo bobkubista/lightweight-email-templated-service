@@ -16,6 +16,18 @@ import bobkubista.examples.services.api.email.model.LinkReplacement;
 public class TemplateEmailStrategyTest {
 
     @Test
+    public void testGeneralEmailStrategyWebVersion() throws URISyntaxException {
+        final EmailContext email = new EmailBuilder("bla@foo.bar", "foobar").addReplacement(new DateReplacement(new Date()))
+                .addReplacement(new LinkReplacement(new URI("http://bla.bla")))
+                .build();
+        final TemplateEmailStrategy strategy = new TemplateEmailStrategy(email, "extraTestTemplate");
+
+        final String composedEmail = strategy.getWebVersion();
+        Assert.assertEquals("testing email template", composedEmail);
+
+    }
+
+    @Test
     public void testTemplateEmailStrategy() throws URISyntaxException {
         final String recipient = "bla@foo.bar";
         final EmailContext email = new EmailBuilder("bla@foo.bar", "foobar").addReplacement(new DateReplacement(new Date()))
@@ -27,5 +39,4 @@ public class TemplateEmailStrategyTest {
         Assert.assertFalse(email.getMessage(), StringUtils.contains(email.getMessage(), "${"));
         Assert.assertEquals("testing email template", composedEmail.getMessage());
     }
-
 }

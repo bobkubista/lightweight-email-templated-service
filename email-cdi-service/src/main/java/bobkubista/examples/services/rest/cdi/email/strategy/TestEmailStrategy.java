@@ -36,5 +36,4 @@ public class TestEmailStrategy extends AbstractEmailStrategy {
     EmailContext getEmail() {
         return this.email;
     }
-
 }
