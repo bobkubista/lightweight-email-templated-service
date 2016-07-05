@@ -3,7 +3,8 @@
  */
 package bobkubista.examples.services.api.email;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -65,10 +66,11 @@ public interface EmailApi {
      * @param template
      *            the template to get
      * @return the template file
+     * @throws IOException
      */
     @Path("{template}")
     @POST
-    Response saveTemplate(@PathParam("template") final String template, final File file);
+    Response saveTemplate(@PathParam("template") final String template, final InputStream fos) throws IOException;
 
     /**
      * Send a test email

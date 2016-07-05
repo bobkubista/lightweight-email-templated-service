@@ -4,6 +4,7 @@
 package bobkubista.examples.services.rest.cdi.email;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.ws.rs.core.Response;
@@ -73,8 +74,13 @@ public class EmailFacadeTest {
     @Test
     public void testSaveTemplate() throws IOException {
         final File file = File.createTempFile("test", "");
-        final Response result = this.facade.saveTemplate("temp", file);
+        ServerProperties.get()
+                .setProperty("email.template.location", ServerProperties.get()
+                        .getString("java.io.tmpdir"));
+        final Response result = this.facade.saveTemplate("temp", new FileInputStream(file));
         Assert.assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), this.facade.getTemplate("temp")
+                .getStatus());
         this.facade.deleteTemplate("temp");
     }
 

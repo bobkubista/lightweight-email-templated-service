@@ -4,9 +4,9 @@
 package bobkubista.examples.services.rest.cdi.email;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.ws.rs.Path;
@@ -75,13 +75,12 @@ public class EmailFacade implements EmailApi {
     }
 
     @Override
-    public Response saveTemplate(final String template, final File file) {
-        try (FileInputStream fos = new FileInputStream(file)) {
+    public Response saveTemplate(final String template, final InputStream fos) throws IOException {
+        try {
             OutputStream out = null;
             int read = 0;
             final byte[] bytes = new byte[1024];
 
-            // TODO File not found thrown
             out = new FileOutputStream(new File(ServerProperties.get()
                     .getString("email.template.location") + File.separator + template + ".tmpl"));
             while ((read = fos.read(bytes)) != -1) {
@@ -93,6 +92,8 @@ public class EmailFacade implements EmailApi {
             LOGGER.error("Uploaded template File not found", e);
             return Response.serverError()
                     .build();
+        } finally {
+            fos.close();
         }
         return Response.ok()
                 .build();
