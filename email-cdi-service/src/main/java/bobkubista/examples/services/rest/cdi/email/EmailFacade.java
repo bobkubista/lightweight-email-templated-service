@@ -57,6 +57,7 @@ public class EmailFacade implements EmailApi {
 
     @Override
     public Response getTemplates() {
+        // TODO refactor so that we only get filenames without extention
         return Response.ok(new File(ServerProperties.get()
                 .getString("email.template.location")).listFiles())
                 .build();

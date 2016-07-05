@@ -3,6 +3,7 @@
  */
 package bobkubista.examples.services.rest.cdi.email;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
@@ -62,7 +63,14 @@ public class EmailFacadeIT extends JerseyTest {
 
     @Test
     public void testGetTemplates() {
-        // TODO
+        final Response response = this.target()
+                .request()
+                .get();
+
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        final File readEntity = response.readEntity(File.class);
+        System.out.println(readEntity);
+        Assert.assertNotNull(readEntity);
     }
 
     @Test
