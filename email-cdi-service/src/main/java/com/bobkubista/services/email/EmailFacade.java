@@ -8,8 +8,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Path;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -58,9 +62,16 @@ public class EmailFacade implements EmailApi {
 
     @Override
     public Response getTemplates() {
-        // TODO refactor so that we only get filenames without extention
-        return Response.ok(new File(ServerProperties.get()
-                .getString("email.template.location")).listFiles())
+        final File[] listFiles = new File(ServerProperties.get()
+                .getString("email.template.location")).listFiles();
+        final List<String> filesNames = Arrays.stream(listFiles)
+                .filter(file -> file.isFile())
+                .map(file -> file.getName())
+                .map(name -> name.substring(0, name.lastIndexOf(".")))
+                .collect(Collectors.toList());
+        final GenericEntity<List<String>> entity = new GenericEntity<List<String>>(filesNames) {
+        };
+        return Response.ok(entity)
                 .build();
     }
 

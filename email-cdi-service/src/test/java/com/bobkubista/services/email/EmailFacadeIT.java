@@ -3,13 +3,14 @@
  */
 package com.bobkubista.services.email;
 
-import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -21,11 +22,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bobkubista.services.email.EmailFacade;
 import com.bobkubista.services.email.api.model.DateReplacement;
 import com.bobkubista.services.email.api.model.EmailContext;
-import com.bobkubista.services.email.api.model.LinkReplacement;
 import com.bobkubista.services.email.api.model.EmailContext.EmailBuilder;
+import com.bobkubista.services.email.api.model.LinkReplacement;
 import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpMessage;
 
@@ -65,13 +65,14 @@ public class EmailFacadeIT extends JerseyTest {
     @Test
     public void testGetTemplates() {
         final Response response = this.target()
-                .request()
+                .request(MediaType.APPLICATION_JSON)
                 .get();
 
         Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        final File readEntity = response.readEntity(File.class);
-        System.out.println(readEntity);
+        final List<String> readEntity = response.readEntity(new GenericType<List<String>>() {
+        });
         Assert.assertNotNull(readEntity);
+        Assert.assertEquals(2, readEntity.size());
     }
 
     @Test

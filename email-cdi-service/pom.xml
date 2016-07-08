@@ -61,6 +61,10 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+        <groupId>org.glassfish.jersey.media</groupId>
+        <artifactId>jersey-media-json-jackson</artifactId>
+      </dependency>
+    <dependency>
       <groupId>tomcat</groupId>
       <artifactId>naming-resources</artifactId>
       <version>5.5.23</version>

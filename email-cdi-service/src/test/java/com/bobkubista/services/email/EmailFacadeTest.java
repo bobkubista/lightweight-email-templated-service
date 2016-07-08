@@ -14,7 +14,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bobkubista.services.email.EmailFacade;
 import com.bobkubista.services.email.api.model.EmailContext;
 import com.bobkubista.services.email.api.model.EmailContext.EmailBuilder;
 import com.dumbster.smtp.SimpleSmtpServer;
