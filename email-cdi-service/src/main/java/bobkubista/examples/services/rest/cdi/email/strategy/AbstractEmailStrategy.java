@@ -1,5 +1,6 @@
 package bobkubista.examples.services.rest.cdi.email.strategy;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -159,9 +160,8 @@ public abstract class AbstractEmailStrategy implements EmailStrategy, WebEmailSt
                 .stream()
                 .forEach((final Entry<String, ? extends Object> replacement) -> context.put(replacement.getKey(), replacement.getValue()));
         final Writer swOut = new StringWriter();
-        Velocity.evaluate(context, swOut, templateFile, IOUtils.toString(this.getClass()
-                .getClassLoader()
-                .getResource(templateFile), Charsets.UTF_8));
+        // TODO should not get from classpath
+        Velocity.evaluate(context, swOut, templateFile, IOUtils.toString(new File(templateFile).toURI(), Charsets.UTF_8));
         return swOut.toString();
     }
 }
